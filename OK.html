@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OK编码可视化</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            text-align: center;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .input-group {
+            margin: 20px 0;
+        }
+        input {
+            padding: 8px;
+            margin: 0 10px;
+            width: 100px;
+        }
+        button {
+            padding: 8px 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .grid-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(4, 30px);
+            grid-template-rows: repeat(2, 30px);
+            gap: 2px;
+        }
+        .cell {
+            width: 30px;
+            height: 30px;
+            background-color: white;
+            border: 1px solid #ccc;
+        }
+        .cell.black {
+            background-color: black;
+        }
+        .error {
+            color: red;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>OK编码可视化</h1>
+        <p>输入O和K的编码（4位二进制），并点击"生成网格"按钮。</p>
+        
+        <div class="input-group">
+            <label for="o-code">O的编码:</label>
+            <input type="text" id="o-code" value="1111">
+            <label for="k-code">K的编码:</label>
+            <input type="text" id="k-code" value="1011">
+            <button onclick="generateGrid()">生成网格</button>
+        </div>
+        
+        <div id="error-message" class="error"></div>
+        
+        <div class="grid-container">
+            <div class="grid" id="grid"></div>
+        </div>
+    </div>
+
+    <script>
+        function generateGrid() {
+            const oCode = document.getElementById('o-code').value;
+            const kCode = document.getElementById('k-code').value;
+            const errorMessage = document.getElementById('error-message');
+            const grid = document.getElementById('grid');
+            
+            // 清空错误信息
+            errorMessage.textContent = '';
+            
+            // 验证输入是否为4位二进制
+            if (!validateCode(oCode) || !validateCode(kCode)) {
+                errorMessage.textContent = '请输入4位二进制编码（仅包含0和1）';
+                return;
+            }
+            
+            // 清空网格
+            grid.innerHTML = '';
+            
+            // 将O和K的编码合并为一个字符串
+            const combinedCode = oCode + kCode;
+            
+            // 生成网格
+            for (let i = 0; i < combinedCode.length; i++) {
+                const cell = document.createElement('div');
+                cell.className = 'cell';
+                if (combinedCode[i] === '1') {
+                    cell.classList.add('black');
+                }
+                grid.appendChild(cell);
+            }
+        }
+        
+        function validateCode(code) {
+            return code.length === 4 && /^[01]+$/.test(code);
+        }
+        
+        // 初始化网格
+        window.onload = generateGrid;
+    </script>
+</body>
+</html>
